@@ -1,0 +1,19 @@
+#!/usr/bin/awk -f
+
+# convert annotation 
+# t1 lab
+# t2 lab
+# t3 lab
+# ...
+# to wavesurfer's lab format
+# t1 t2 lab
+# t2 t3 lab
+# t3 t4 lab
+# ...
+
+{
+	if (FNR > 1) print lt, $1, c
+	lt = $1
+	c = $2
+}
+

@@ -1,0 +1,36 @@
+#!/bin/bash
+
+if [ $# -lt 1 -o ! -d "$1" ]; then
+	echo "usage: $(basename $0) audiodir [format monitorport midiport outsuffix]"
+	exit
+else
+	dir=${1%/}
+fi
+
+# default format is wav
+format=${2:-wav}
+monitorport=${3:-system:playback_1}
+midiport=${4:-alsa_pcm:nanoPAD/midi_capture_1}
+outsuffix=${5:-ann}
+
+# exit if no files match *.$format
+shopt -s failglob
+
+# to deal with file names containing spaces
+export IFS=$'\n'
+
+for f in $dir/*.$format; do
+	# pipe output to working directory
+	outfile=$(basename ${f%.$format}.$outsuffix)
+	if [ -e "$outfile" ]; then
+		read -p "'$outfile' exists, overwrite? (y|n) " ow
+		if [ "$ow" != "y" ]; then continue; fi
+	fi
+	action=r
+	while [ "$action" != "p" ]; do
+		recolino -a $monitorport -m $midiport $f > $outfile
+		# what's next?
+		read -p "Repeat, proceed, quit? (r|p|q) " action 
+		if [ "$action" = "q" ]; then break 2; fi
+	done
+done
