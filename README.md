@@ -109,5 +109,4 @@ Recolino is free software, licensed under the terms of the GPL2.
 DOWNLOAD
 --------
 
-<http://www.jawebada.de/Software/Recolino>
-
+<https://github.com/jawebada/recolino>
